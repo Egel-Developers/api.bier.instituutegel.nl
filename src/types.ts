@@ -5,7 +5,7 @@ export type Data = {
   rating?: {
     beer: string;
     rating: number;
-  }
+  };
 };
 
 export type Rating = {

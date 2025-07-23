@@ -22,9 +22,23 @@ const server = Bun.serve({
 
         try {
           if (data_.name === "") throw "name up";
+          if (data_.name.length < 3 || data_.name.length > 32) {
+            ws.send("wees geen snuif");
+            return;
+          }
           if (!data_.locked_in) ws.send("name down");
 
           if ("rating" in data_ && data_.rating !== undefined) {
+            if (
+              data_.rating.beer.length < 3 ||
+              data_.rating.beer.length > 32 ||
+              data_.rating.rating < 0 ||
+              data_.rating.rating > 100
+            ) {
+              ws.send("wees geen snuif");
+              return;
+            }
+
             await Ratings.rate({
               username: data_.name,
               beer: data_.rating.beer,
