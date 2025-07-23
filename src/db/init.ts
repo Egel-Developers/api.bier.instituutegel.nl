@@ -17,19 +17,11 @@ async function init() {
 async function up() {
   await sql.begin(async (sql) => {
     await sql`
-    CREATE TABLE IF NOT EXISTS beers (
-        id INT NOT NULL PRIMARY KEY,
-        name VARCHAR(255) UNIQUE NOT NULL
-    );
-    CREATE TABLE IF NOT EXISTS users (
-        id INT NOT NULL PRIMARY KEY,
-        name VARCHAR(255) UNIQUE NOT NULL
-    );
     CREATE TABLE IF NOT EXISTS ratings (
-        user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        beer_id INT NOT NULL REFERENCES beers(id) ON DELETE CASCADE,
+        username VARCHAR(255) NOT NULL,
+        beer VARCHAR(255) NOT NULL,
         rating INT NOT NULL,
-        PRIMARY KEY (user_id, beer_id)
+        PRIMARY KEY (username, beer)
     );
     `.simple();
   });
@@ -39,8 +31,6 @@ async function down() {
   await sql.begin(async (sql) => {
     await sql`
         DROP TABLE IF EXISTS ratings;
-        DROP TABLE IF EXISTS users;
-        DROP TABLE IF EXISTS beers;
         `.simple();
   });
 }
