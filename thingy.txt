@@ -1,0 +1,125 @@
+
+Things the client needs to know:
+- Beers and their rankings
+- Who gave what beer what ranking
+
+The goal is to minimise data transfer between client and server.
+
+Proposal:
+On socket open, the server sends essentially ALL the data to the client.
+Afterwards, only changes should have to be sent.
+
+To achieve this, users and beers should have IDs, as they are way smaller than strings. 
+The client will have to keep hashmaps of users and beers in memory. Plus their own user_id
+When a new rating is added, we should send a message consisting of a few fields:
+From client:
+1. beer_id
+2. beer?
+3. rating
+
+Field 2 should only be sent if this is the first rating for this beer.
+
+From server:
+1. user_id
+2. username?
+3. beer_id
+4. beer?
+5. rating
+
+Fields 2 and 4 should only be sent if this is the first rating for this user or this beer respectively. 
+
+This is one kind of message. We also have messages related to authentication.
+From client:
+1. Sending the code
+2. Setting your username
+
+From server:
+1. Confirming code
+2. Confirming username
+
+The authentication data from the client has to be included in every message, as the server is stateless.
+
+
+Now, to achieve (near-)optimal data transfer, let us determine a kind of packet format that will 
+be implemented using the JS UInt8Array.
+
+From client:
+1. message_type:	0 (sending code)
+2. code_length:		byte (3-32)
+3. code:		string
+
+1. message_type:	1 (sending username)
+2. code_length:		byte (3-32)
+3. code:		string
+4. username_length:	byte (3-32)
+5. username:		string
+
+1. message_type:	2 (submitting rating, new beer)
+2. code_length:		byte (3-32)
+3. code:		string
+4. user_id:		byte
+5. rating:		byte (0-100)
+6. beer_length:		byte (3-32)
+7. beer:		string
+
+1. message_type:	3 (submitting rating, existing beer)
+2. code_length:		byte (3-32)
+3. code:		string
+4. user_id:		byte
+5. rating:		byte (0-100)
+6. beer_id:		byte 
+
+From server:
+1. message_type:	0 (initial data transfer)
+2. user_count:		byte
+(repeat user_count times)		// usernames should be sorted by id
+3. username_length:	byte (3-32)
+4. username:		string
+(end repeat)
+5. beer_count:		byte
+(repeat beer_count times)		// beers should be sorted by id
+6. beer_length:		byte (3-32)
+7. beer:		string
+(end repeat)
+8. rating_count:	2 bytes
+(repeat rating_count times)
+9. user_id:		byte
+10. beer_id:		byte
+11. rating:		byte (0-100)
+
+1. message_type:	1 (request code)
+ 
+1. message_type:	2 (accept code)
+
+1. message_type:	3 (request username)
+
+1. message_type:	4 (accept username)
+2. user_id:		byte	// this is your user_id. The client should save this
+
+1. message_type:	5 (new rating, existing beer, existing user)
+2. rating:		byte (0-100)
+3. beer_id:		byte
+4. user_id:		byte
+
+1. message_type:	6 (new rating, existing beer, new user)
+2. rating:		byte (0-100)
+3. beer_id:		byte
+4. user_id:		byte
+5. username_length:	byte (3-32)
+6. username:		string
+
+1. message_type:	7 (new rating, new beer, existing user)
+2. rating:		byte (0-100)
+3. beer_id:		byte
+4. beer_length:		byte (3-32)
+5. beer:		string
+6. user_id:		byte
+
+1. message_type:	8 (new rating, new beer, new user)
+2. rating:		byte (0-100)
+3. beer_id:		byte
+4. beer_length:		byte (3-32)
+5. beer:		string
+6. user_id:		byte
+7. username_length:	byte (3-32)
+8. username:		string

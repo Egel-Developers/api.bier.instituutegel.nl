@@ -17,12 +17,26 @@ async function init() {
 async function up() {
   await sql.begin(async (sql) => {
     await sql`
-    CREATE TABLE IF NOT EXISTS ratings (
-        username VARCHAR(255) NOT NULL,
-        beer VARCHAR(255) NOT NULL,
-        rating INT NOT NULL,
-        PRIMARY KEY (username, beer)
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(32) NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS beers (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(32) NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS ratings (
+      user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      beer_id INT NOT NULL REFERENCES beers(id) ON DELETE CASCADE,
+      rating INT NOT NULL,
+      PRIMARY KEY (user_id, beer_id)
+    );
+    -- CREATE TABLE IF NOT EXISTS ratings (
+    --     username VARCHAR(255) NOT NULL,
+    --     beer VARCHAR(255) NOT NULL,
+    --     rating INT NOT NULL,
+    --     PRIMARY KEY (username, beer)
+    -- );
     `.simple();
   });
 }
@@ -31,6 +45,8 @@ async function down() {
   await sql.begin(async (sql) => {
     await sql`
         DROP TABLE IF EXISTS ratings;
+        DROP TABLE IF EXISTS beers;
+        DROP TABLE IF EXISTS users;
         `.simple();
   });
 }
