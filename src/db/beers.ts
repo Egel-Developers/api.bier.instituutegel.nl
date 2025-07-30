@@ -7,7 +7,8 @@ async function getAll() {
         SELECT id, name FROM beers;
         `;
     return users;
-  } catch {
+  } catch (e) {
+    console.error(e);
     return false;
   }
 }
@@ -20,7 +21,8 @@ async function add(name: string) {
     })} ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name RETURNING id;
     `;
     return parseInt(id);
-  } catch {
+  } catch (e) {
+    console.error(e);
     return false;
   }
 }

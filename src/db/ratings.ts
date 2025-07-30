@@ -7,7 +7,8 @@ async function add(rating: Rating) {
       rating
     )} ON CONFLICT (user_id, beer_id) DO UPDATE SET rating = ${rating.rating}`;
     return true;
-  } catch {
+  } catch (e) {
+    console.error(e);
     return false;
   }
 }
@@ -31,7 +32,7 @@ async function add(rating: Rating) {
 //       beer: r.beer,
 //       rating: parseInt(r.rating.toString()),
 //     }));
-//   } catch {
+//   } catch (e) { console.error(e);
 //     return false;
 //   }
 // }
@@ -65,7 +66,8 @@ async function getAll() {
     `;
 
     return ratings;
-  } catch {
+  } catch (e) {
+    console.error(e);
     return false;
   }
 }

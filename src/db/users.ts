@@ -7,7 +7,8 @@ async function getAll() {
         SELECT id, name FROM users;
         `;
     return users;
-  } catch {
+  } catch (e) {
+    console.error(e);
     return false;
   }
 }
@@ -20,7 +21,8 @@ async function add(name: string) {
     })} ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name RETURNING id;
     `;
     return parseInt(id);
-  } catch {
+  } catch (e) {
+    console.error(e);
     return false;
   }
 }
@@ -47,7 +49,8 @@ async function getStatus(user_id: number): Promise<false | UserStatus> {
         .length > 0;
     if (hasRatings) return "has_ratings";
     return { username: res[0].name };
-  } catch {
+  } catch (e) {
+    console.error(e);
     return false;
   }
 }

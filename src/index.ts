@@ -38,10 +38,6 @@ const server = Bun.serve({
 
           if (user_id === false) return;
           ws.send(Encoder.encode({ messageType: 4, user_id }));
-          // server.publish(
-          //   "ranking",
-          //   Encoder.encode({ messageType: 6, user_id, username: msg.username })
-          // );
           return;
         }
         case 2: {
