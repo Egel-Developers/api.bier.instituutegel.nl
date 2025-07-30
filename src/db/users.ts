@@ -17,7 +17,7 @@ async function add(name: string) {
     const [{ id }] = await sql`
     INSERT INTO users ${sql({
       name,
-    })} ON CONFLICT (name) DO NOTHING RETURNING id;
+    })} ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name RETURNING id;
     `;
     return parseInt(id);
   } catch {

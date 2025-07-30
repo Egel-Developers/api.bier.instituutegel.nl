@@ -19,11 +19,11 @@ async function up() {
     await sql`
     CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
-      name VARCHAR(32) NOT NULL
+      name VARCHAR(32) UNIQUE NOT NULL
     );
     CREATE TABLE IF NOT EXISTS beers (
       id SERIAL PRIMARY KEY,
-      name VARCHAR(32) NOT NULL
+      name VARCHAR(32) UNIQUE NOT NULL
     );
     CREATE TABLE IF NOT EXISTS ratings (
       user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,

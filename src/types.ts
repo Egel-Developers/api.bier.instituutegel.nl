@@ -43,6 +43,7 @@ export interface UsernameReqServerMessage {
 
 export interface UsernameAccServerMessage {
   messageType: 4;
+  user_id: number;
 }
 
 export interface RatingServerMessage {

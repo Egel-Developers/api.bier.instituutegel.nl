@@ -35,8 +35,10 @@ const server = Bun.serve({
           }
 
           const user_id = await Users.add(msg.username);
+          console.log(user_id);
+
           if (user_id === false) return;
-          ws.send(Encoder.encode({ messageType: 4 }));
+          ws.send(Encoder.encode({ messageType: 4, user_id }));
           // server.publish(
           //   "ranking",
           //   Encoder.encode({ messageType: 6, user_id, username: msg.username })
