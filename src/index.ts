@@ -17,7 +17,7 @@ const server = Bun.serve({
   },
   websocket: {
     async message(ws, message) {
-      const msg = Decoder.decode(message as string);
+      const msg = Decoder.decode(message as unknown as ArrayBuffer);
       if (msg.code !== CODE) {
         ws.send(Encoder.encode({ messageType: 1 }));
         return;
