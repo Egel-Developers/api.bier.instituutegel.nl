@@ -35,7 +35,6 @@ const server = Bun.serve({
           }
 
           const user_id = await Users.add(msg.username);
-          console.log(user_id);
 
           if (user_id === false) return;
           ws.send(Encoder.encode({ messageType: 4, user_id }));
@@ -56,6 +55,8 @@ const server = Bun.serve({
           const beer_id = await Beers.add(msg.beer);
           if (beer_id === false) return;
 
+          // const isNew = await Beers.isNew(beer_id);
+
           const res = await Ratings.add({
             user_id: msg.user_id,
             beer_id: beer_id,
@@ -73,6 +74,7 @@ const server = Bun.serve({
               rating: msg.rating,
               user_id: msg.user_id,
               beer_id,
+              // beer: isNew ? msg.beer : undefined,
               beer: msg.beer,
               username,
             })

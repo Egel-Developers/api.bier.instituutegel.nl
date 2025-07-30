@@ -25,4 +25,11 @@ async function add(name: string) {
   }
 }
 
-export const Beers = { getAll, add };
+async function isNew(beer_id: number) {
+  return (
+    (await sql`SELECT rating FROM ratings WHERE beer_id = ${beer_id} LIMIT 1`)
+      .length > 0
+  );
+}
+
+export const Beers = { getAll, add, isNew };
