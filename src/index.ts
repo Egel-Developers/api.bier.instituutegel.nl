@@ -41,6 +41,8 @@ const server = Bun.serve({
           return;
         }
         case 2: {
+          if (msg.rating < 0 || msg.rating > 100) return;
+
           const userStatus = await Users.getStatus(msg.user_id);
           if (userStatus === false) return;
           if (userStatus === "not_exists") {
@@ -78,6 +80,8 @@ const server = Bun.serve({
           return;
         }
         case 3: {
+          if (msg.rating < 0 || msg.rating > 100) return;
+
           const userStatus = await Users.getStatus(msg.user_id);
           if (userStatus === false) return;
           if (userStatus === "not_exists") {
